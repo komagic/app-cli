@@ -1,24 +1,39 @@
 const chalk = require('chalk')
-const log = console.log;
+const log = console.log
 
 module.exports = class {
-    constructor(){
+  constructor () {
+    this.middlewares = []
+  }
 
+  use (middleware) {
+    if (typeof middleware === 'function') {
+      this.middlewares.push(middleware)
+    } else {
+        this.logError("middleware not supported!");
+        process.exit(1);
     }
+    return this
+  }
 
-    logSuccess(message){
-        log(chalk.bold.green(message))
-    }
+  run (state) {
+    return this.middlewares.reduce(
+      (prev, current) => prev.then(() => current(state)),
+      Promise.resolve()
+    )
+  }
 
-    logWarning(message){
-        log(chalk.keyword('orange')(message))
-    }
+  logSuccess (message) {
+    log(chalk.bold.green(message))
+  }
 
-    logError(message){
-        log(chalk.bold.red(message))
-    }
+  logWarning (message) {
+    log(chalk.keyword('orange')(message))
+  }
 
-    copyTemplate(templateUrl){
-        
-    }
+  logError (message) {
+    log(chalk.bold.red(message))
+  }
+
+  copyTemplate (templateUrl) {}
 }

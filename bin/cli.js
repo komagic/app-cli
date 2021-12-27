@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const program = require('commander')
+const chalk= require('chalk')
 console.log('cli','');
 program
   .version(require('../package').version)
@@ -21,7 +22,15 @@ program
   })
 
 
-
+  const onError = (err) => {
+    // output detail when exception occurs
+    console.error('Exception occurred: ' + err.message)
+    console.log(chalk.bold.red(message))
+    process.exit(1)
+  }
+  
+  process.on('uncaughtException', onError)
+  process.on('unhandledRejection', onError)
 
 
   program.parse(process.argv)

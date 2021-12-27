@@ -6,43 +6,58 @@ const gulp = require('gulp')
 const ANSWERS = require('./answers-default')
 const inquirer = require('inquirer');
 const download = require('./core/download');
+const tempDist = '__remote-template';
+const file = require('./core/file');
+const confirm = require('./core/confirm');
+const { fsyncSync } = require('fs')
 
 module.exports = class extends baseGenerator {
   constructor (questions,templates) {
-      super();
-    
+    super();
     this.answers = {}
+    this.templates = templates;
     inquirer.prompt(questions).then(answers => {
-        console.log('answers',answers);
+    // 1
+    this.answers = Object.assign({}, ANSWERS, answers)
+    // confirm
 
-      //todo get resources
-      // merge questions
-     this.answers = Object.assign({}, ANSWERS, answers)
-    // this.copyEjs(this.answers)
-    // out folder name
-    const dist = this.answers['outputFolderName'];
-    this.downloadTemplate(templates[this.answers['appType']],dist).then(val=>{
-      console.log('val',val);
-    });
+    // 2
+    this.main();
+ 
     })
   }
 
-  downloadTemplate(url) {
-   return download(url);
+   async main(){
+      let con = await confirm(this.answers.outputFolderName);
+      let val = await this.downloadTemplate(this.templates[this.answers['appType']],tempDist);
+      this.copyEjs(tempDist);
+      this.clearCache(tempDist);
+  }
+
+  clearCache(dist){
+    file.remove(dist);
+  }
+
+  downloadTemplate(url,dist) {
+     return  download(url,dist)
+  }
+
+  completeTask(){
+    this.logSuccess('completed!')
   }
 
   destinationPath () {
     return process.cwd()
   }
 
-  templatePath () {
-    return path.join(__dirname, '/template')
+  templatePath (dir) {
+    console.log('path:',path.join(__dirname,'../', dir));
+    return path.join(__dirname,'../', dir)
   }
 
   copyEjs (answers) {
     const { src, dest } = gulp
-    console.log('copyEjs:',this.templatePath());
-    return src(this.templatePath()+'/**', { nodir: true })
+    return src(this.templatePath(tempDist)+'/**', { nodir: true })
       .pipe(
         rename(path => {
           Object.keys(answers).forEach(key => {

@@ -1,4 +1,4 @@
-const ANSWERS  = require('./answers-default')
+const ANSWERS = require('./answers-default')
 const templates = require('../templates.json')
 
 module.exports = [
@@ -7,6 +7,12 @@ module.exports = [
     name: 'appName',
     messages: 'What is the application name?',
     default: ANSWERS['appName']
+  },
+  {
+    type: 'string',
+    name: 'outputFolderName',
+    messages: 'What is the output folder name?',
+    default: ANSWERS['outputFolderName']
   },
   {
     type: 'list',
@@ -18,7 +24,7 @@ module.exports = [
     type: 'checkbox',
     name: 'area',
     messages: 'What is the application name?',
-    choices: [{value:'CN',checked:true},'TW','ID','IN'],
+    choices: [{ value: 'CN', checked: true }, 'TW', 'ID', 'IN'],
     default: ANSWERS['area']
   }
 ]
