@@ -25,7 +25,7 @@ program
   const onError = (err) => {
     // output detail when exception occurs
     console.error('Exception occurred: ' + err.message)
-    console.log(chalk.bold.red(message))
+    console.log(chalk.bold.red(err.message))
     process.exit(1)
   }
   
