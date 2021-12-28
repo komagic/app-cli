@@ -1,4 +1,4 @@
-# APP-CLI
+# tapp-cli
 
 a simple template-based scaffolding tool to help create app
 
@@ -25,18 +25,18 @@ npm run start
 ```
 or
 ```
-npm install app-cli
-app-cli create
+npm install tapp-cli
+tapp-cli create
 ```
 
 
 ### Options
 create template
 ```
-app-cli create
+tapp-cli create
 ```
 add template
 ```
-app-cli add
+tapp-cli add
 ```
 

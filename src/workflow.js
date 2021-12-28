@@ -6,7 +6,7 @@ const gulp = require('gulp')
 const ANSWERS = require('./answers-default')
 const inquirer = require('inquirer');
 const download = require('./core/download');
-const tempDist = '__remote-template';
+const tempDir = '__remote-template';
 const file = require('./core/file');
 const confirm = require('./core/confirm');
 const { fsyncSync } = require('fs')
@@ -29,17 +29,17 @@ module.exports = class extends baseGenerator {
 
    async main(){
       let con = await confirm(this.answers.outputFolderName);
-      let val = await this.downloadTemplate(this.templates[this.answers['appType']],tempDist);
-      this.copyEjs(tempDist);
-      this.clearCache(tempDist);
+      let val = await this.downloadTemplate(this.templates[this.answers['appType']],tempDir);
+      this.copyEjs(tempDir);
+      this.clearCache(tempDir);
   }
 
-  clearCache(dist){
-    file.remove(dist);
+  clearCache(tempDir){
+    file.remove(tempDir);
   }
 
-  downloadTemplate(url,dist) {
-     return  download(url,dist)
+  downloadTemplate(url,tempDir) {
+     return  download(url,tempDir)
   }
 
   completeTask(){
@@ -47,17 +47,19 @@ module.exports = class extends baseGenerator {
   }
 
   destinationPath () {
-    return process.cwd()
+    const dest =path.resolve(process.cwd(),this.answers.outputFolderName);
+    console.log('dest',dest);
+    return dest
   }
 
   templatePath (dir) {
-    console.log('path:',path.join(__dirname,'../', dir));
-    return path.join(__dirname,'../', dir)
+    console.log('templatePath:',path.join(process.cwd(), dir));
+    return path.join(process.cwd(), dir)
   }
 
   copyEjs (answers) {
     const { src, dest } = gulp
-    return src(this.templatePath(tempDist)+'/**', { nodir: true })
+    return src(this.templatePath(tempDir)+'/**', { nodir: true })
       .pipe(
         rename(path => {
           Object.keys(answers).forEach(key => {
