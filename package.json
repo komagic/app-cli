@@ -11,6 +11,7 @@
     "template"
   ],
   "scripts": {
+    "eslint": "eslint --fix src/",
     "start":"node bin/cli.js create",
     "ad":"node bin/cli.js add",
     "test": "echo \"Error: no test specified\" && exit 1"

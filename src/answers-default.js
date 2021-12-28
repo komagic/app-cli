@@ -1,5 +1,5 @@
 module.exports = {
-    appName:'myservices',
-    outputFolderName:'dist',
-    area: 'CN',
+	appName:'myservices',
+	outputFolderName:'dist',
+	area: 'CN',
 }
